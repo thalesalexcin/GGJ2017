@@ -5,16 +5,46 @@ using UnityEngine;
 public class SignalWave : MonoBehaviour
 {
     public float Speed = 1f;
+    public int NumberOfBounces = 3;
+
+    public EInputType InputType { get; set; }
+    public int Id { get; set; }
 
     private Rigidbody2D _Rigidbody;
+    private int _TimesBounced;
 
     void Awake()
     {
         _Rigidbody = GetComponent<Rigidbody2D>();
+        _TimesBounced = 0;
 	}
 
-    public void Send(Vector2 direction)
+    public void Send(Vector2 direction, EInputType input, int id)
     {
+        InputType = input;
+        Id = id;
         _Rigidbody.AddForce(direction * Speed, ForceMode2D.Impulse);
+    }
+
+    void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.CompareTag("Receptor"))
+        {
+            var rigidbody = collider.GetComponent<Rigidbody2D>();
+            switch (InputType)
+            {
+                case EInputType.Jump:
+                    rigidbody.AddForce(Vector2.up * 100);
+                    break;
+            }
+
+            Destroy(gameObject);
+        }
+        else
+        {
+            _TimesBounced++;
+            if (_TimesBounced >= NumberOfBounces)
+                Destroy(gameObject);
+        }
     }
 }
