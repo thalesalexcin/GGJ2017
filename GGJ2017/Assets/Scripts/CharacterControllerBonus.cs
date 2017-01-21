@@ -49,9 +49,6 @@ public class CharacterControllerBonus : MonoBehaviour
 
     void Start()
     {
-        _AudioManager.Play(EAudioType.Roll);
-        _AudioManager.Mute(EAudioType.Roll, true);
-
         SpawnParticles(robotParticles);
     }
 
@@ -90,11 +87,11 @@ public class CharacterControllerBonus : MonoBehaviour
             {
                 case EInputType.Left:
                     _velocity.x -= col.gameObject.GetComponent<SignalWave>().robotSpeed;
-                    _AudioManager.Mute(EAudioType.Roll, false);
+                    _AudioManager.PlayOneShot(EAudioType.Roll);
                     break;
                 case EInputType.Right:
                     _velocity.x += col.gameObject.GetComponent<SignalWave>().robotSpeed;
-                    _AudioManager.Mute(EAudioType.Roll, false);
+                    _AudioManager.PlayOneShot(EAudioType.Roll);
                     break;
                 case EInputType.Jump:
                     if (_controller.isGrounded)
@@ -222,8 +219,8 @@ public class CharacterControllerBonus : MonoBehaviour
         // grab our current _velocity to use as a base for all calculations
         _velocity = _controller.velocity;
 
-        if (Mathf.Abs(_velocity.x) <= 0.1f)
-            _AudioManager.Mute(EAudioType.Roll, true);
+        //if (Mathf.Abs(_velocity.x) <= 0.1f)
+        //    _AudioManager.Mute(EAudioType.Roll, true);
     }
 
 }

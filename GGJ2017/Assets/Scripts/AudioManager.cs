@@ -9,12 +9,14 @@ public enum EAudioType
     Die,
     Roll,
     Jump,
-    TurretShot    
+    TurretShot,
+    Wave
 }
 
 public class AudioManager : MonoBehaviour
 {
     public List<AudioSource> Audios;
+    public List<AudioSource> Waves;
 
     void Awake()
     {
@@ -28,7 +30,22 @@ public class AudioManager : MonoBehaviour
 
     public void Play(EAudioType type)
     {
-        Audios[(int)type].Play();
+        if (type != EAudioType.Wave)
+            Audios[(int)type].Play();
+        else
+            _PlayRandomWave();
+    }
+
+    private void _PlayRandomWave()
+    {
+        var index = UnityEngine.Random.Range(0, 6);
+        Waves[index].Play();
+    }
+
+    public void PlayOneShot(EAudioType type)
+    {
+        var clip = Audios[(int)type].clip;
+        Audios[(int)type].PlayOneShot(clip);
     }
 
     public void Mute(EAudioType type, bool mute)

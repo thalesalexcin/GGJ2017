@@ -18,10 +18,12 @@ public class SignalEmitter : MonoBehaviour
     private Emitter _Emitter;
     private Dictionary<EInputType, float> _timersByInput;
     private int _CurrentId = 0;
+    private AudioManager _AudioManager;
 
     void Awake()
     {
         _Emitter = GetComponent<Emitter>();
+        _AudioManager = FindObjectOfType<AudioManager>();
     }
 
     // Use this for initialization
@@ -76,6 +78,9 @@ public class SignalEmitter : MonoBehaviour
                 _timersByInput[input] = TimeBetweenSameInput;
             }
         }
+
+        if (inputs.Any())
+            _AudioManager.Play(EAudioType.Wave);
     }
 
     private void _SetEmmiterRotation()
