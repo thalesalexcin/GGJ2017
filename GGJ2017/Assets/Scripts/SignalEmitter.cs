@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public enum EInputType
 {
@@ -14,6 +15,7 @@ public class SignalEmitter : MonoBehaviour
 {
     public SignalWave SignalWavePrefab;
     public GameObject SignalsHolder;
+    public bool IsUsingJoystick;
 
     [Range(15, 360)]
     public int Angle = 360;
@@ -29,24 +31,41 @@ public class SignalEmitter : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        var position = GetWorldPositionOnPlane(Camera.main, Input.mousePosition, 0);
-        var direction = position - transform.position;
-        var rotation = Quaternion.LookRotation(Vector3.forward, direction);
-        transform.rotation = rotation;
+        _SetEmmiterRotation();
+        _SendSignals();
+    }
 
+    private void _SendSignals()
+    {
         EInputType input = EInputType.None;
 
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetAxisRaw("Fire1") > 0.5f)
             input = EInputType.Right;
 
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (Input.GetAxis("Fire2") > 0.5f)
             input = EInputType.Left;
 
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetAxis("Fire3") > 0.5f)
             input = EInputType.Jump;
 
-        if(input != EInputType.None)
+        if (input != EInputType.None)
             _SendSignals(input, _CurrentId++);
+    }
+
+    private void _SetEmmiterRotation()
+    {
+        var x = Input.GetAxis("Horizontal");
+        var y = Input.GetAxis("Vertical");
+        var direction = new Vector2(x, y);
+
+        if (x == 0 && y == 0)
+        {
+            var position = GetWorldPositionOnPlane(Camera.main, Input.mousePosition, 0);
+            direction = position - transform.position;
+        }
+
+        var rotation = Quaternion.LookRotation(Vector3.forward, direction);
+        transform.rotation = rotation;
     }
 
     public static Vector3 GetWorldPositionOnPlane(Camera camera, Vector3 screenPosition, float z)

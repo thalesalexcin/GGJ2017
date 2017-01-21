@@ -38,7 +38,7 @@ public class SignalWave : MonoBehaviour
     void OnCollisionEnter2D()
     {
         _TimesBounced++;
-        if (_TimesBounced >= NumberOfBounces)
+        if (_TimesBounced > NumberOfBounces)
             Destroy(gameObject);
     }
 }
