@@ -102,7 +102,8 @@ public class CharacterControllerBonus : MonoBehaviour
         }
         if (col.CompareTag("Finish"))
         {
-            SceneManager.LoadScene(col.GetComponent<EndPoint>().levelToLoad, LoadSceneMode.Single);
+            var scene = SceneManager.GetActiveScene();
+            SceneManager.LoadScene(scene.buildIndex+1, LoadSceneMode.Single);
         }
     }
 
