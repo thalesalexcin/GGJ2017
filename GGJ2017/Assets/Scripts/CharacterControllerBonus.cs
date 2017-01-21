@@ -18,8 +18,9 @@ public class CharacterControllerBonus : MonoBehaviour
     private CharacterController2D _controller;
     private Animator _animator;
     private RaycastHit2D _lastControllerColliderHit;
-    private Vector3 _velocity;
-
+    [HideInInspector]
+    public Vector3 _velocity;
+    public bool debugControls;
 
     void Awake()
     {
@@ -48,10 +49,26 @@ public class CharacterControllerBonus : MonoBehaviour
 
     void onTriggerEnterEvent(Collider2D col)
     {
-        Debug.Log("onTriggerEnterEvent: " + col.gameObject.name);
+        //Debug.Log("onTriggerEnterEvent: " + col.gameObject.name);
         if (col.gameObject.tag == "BlocksTrigger")
         {
             _velocity.x += 20;
+        }
+        if (col.gameObject.tag == "Signal")
+        {
+            switch(col.gameObject.GetComponent<SignalWave>().InputType)
+            {
+                case EInputType.Left:
+                    _velocity.x -= col.gameObject.GetComponent<SignalWave>().robotSpeed;
+                break;
+                case EInputType.Right:
+                    _velocity.x += col.gameObject.GetComponent<SignalWave>().robotSpeed;
+                break;
+                case EInputType.Jump:
+                    _velocity.y = Mathf.Sqrt(2f * jumpHeight * -gravity);
+                break;
+            }
+            //Destroy(col.gameObject);
         }
     }
 
@@ -68,9 +85,11 @@ public class CharacterControllerBonus : MonoBehaviour
     void Update()
     {
         if (_controller.isGrounded)
-            _velocity.y = 0;
+        {
+            //_velocity.y = 0;
+        }
 
-        if (Input.GetKey(KeyCode.RightArrow))
+        if ((Input.GetKey(KeyCode.RightArrow))&&(debugControls))
         {
             normalizedHorizontalSpeed = 1;
             if (transform.localScale.x < 0f)
@@ -81,7 +100,7 @@ public class CharacterControllerBonus : MonoBehaviour
                 //_animator.Play(Animator.StringToHash("Run"));
             }
         }
-        else if (Input.GetKey(KeyCode.LeftArrow))
+        else if ((Input.GetKey(KeyCode.LeftArrow))&&(debugControls))
         {
             normalizedHorizontalSpeed = -1;
             if (transform.localScale.x > 0f)
@@ -104,7 +123,7 @@ public class CharacterControllerBonus : MonoBehaviour
 
 
         // we can only jump whilst grounded
-        if (_controller.isGrounded && Input.GetKeyDown(KeyCode.UpArrow))
+        if ((_controller.isGrounded && Input.GetKeyDown(KeyCode.UpArrow))&&(debugControls))
         {
             _velocity.y = Mathf.Sqrt(2f * jumpHeight * -gravity);
             //_animator.Play(Animator.StringToHash("Jump"));
@@ -120,7 +139,7 @@ public class CharacterControllerBonus : MonoBehaviour
 
         // if holding down bump up our movement amount and turn off one way platform detection for a frame.
         // this lets us jump down through one way platforms
-        if (_controller.isGrounded && Input.GetKey(KeyCode.DownArrow))
+        if ((_controller.isGrounded && Input.GetKey(KeyCode.DownArrow))&&(debugControls))
         {
             _velocity.y *= 3f;
             _controller.ignoreOneWayPlatformsThisFrame = true;

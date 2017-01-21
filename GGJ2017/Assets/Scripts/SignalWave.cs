@@ -9,6 +9,7 @@ public class SignalWave : MonoBehaviour
 
     public EInputType InputType { get; set; }
     public int Id { get; set; }
+    public float robotSpeed;
 
     private Rigidbody2D _Rigidbody;
     private int _TimesBounced;
@@ -28,9 +29,8 @@ public class SignalWave : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.CompareTag("Receptor"))
+        if (collider.CompareTag("Robot"))
         {
-            //call character functions
             Destroy(gameObject);
         }
         else
