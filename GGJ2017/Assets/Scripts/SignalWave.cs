@@ -36,11 +36,20 @@ public class SignalWave : MonoBehaviour
         if (collider.CompareTag("Robot"))
             _DestroyAfterEffects();
 
-        if (collider.CompareTag("NotBouncyBlock"))
+        else if (collider.CompareTag("NotBouncyBlock"))
             _DestroyAfterEffects();
 
-        if (collider.CompareTag("Inverser"))
+        else if (collider.CompareTag("Inverser"))
             _InverseInput();
+
+        else if (collider.CompareTag("SpeedBlock"))
+            _ChangeSpeed(collider);
+    }
+
+    private void _ChangeSpeed(Collider2D collider)
+    {
+        var multiplier = collider.GetComponent<SpeedBlock>().SpeedMultiplier;
+        _Rigidbody.velocity *= multiplier;
     }
 
     private void _InverseInput()
