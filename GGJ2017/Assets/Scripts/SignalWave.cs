@@ -35,6 +35,20 @@ public class SignalWave : MonoBehaviour
     {
         InputType = input;
         Id = id;
+
+        switch (input)
+        {
+            case EInputType.Jump:
+                GetComponent<ParticleSystemRenderer>().material.SetColor("_TintColor", Color.green);
+                break;
+            case EInputType.Left:
+                GetComponent<ParticleSystemRenderer>().material.SetColor("_TintColor", Color.red);
+                break;
+            case EInputType.Right:
+                GetComponent<ParticleSystemRenderer>().material.SetColor("_TintColor", Color.blue);
+                break;
+        }
+
         _Rigidbody.AddForce(direction * Speed, ForceMode2D.Impulse);
     }
 
