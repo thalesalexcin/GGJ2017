@@ -19,6 +19,7 @@ public class SignalEmitter : MonoBehaviour
     private Dictionary<EInputType, float> _timersByInput;
     private int _CurrentId = 0;
     private AudioManager _AudioManager;
+    private bool _hasSent;
 
     void Awake()
     {
@@ -45,6 +46,7 @@ public class SignalEmitter : MonoBehaviour
     private void _SendSignals()
     {
         List<EInputType> inputs = new List<EInputType>();
+        _hasSent = false;
 
         if (Input.GetAxisRaw("Fire1") > 0.5f)
         {
@@ -76,10 +78,11 @@ public class SignalEmitter : MonoBehaviour
             {
                 _Emitter.Send((int)transform.rotation.eulerAngles.z, transform.position, input, _CurrentId++);
                 _timersByInput[input] = TimeBetweenSameInput;
+                _hasSent = true;
             }
         }
 
-        if (inputs.Any())
+        if (_hasSent)
             _AudioManager.Play(EAudioType.Wave);
     }
 

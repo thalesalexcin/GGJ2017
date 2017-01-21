@@ -17,6 +17,7 @@ public class AudioManager : MonoBehaviour
 {
     public List<AudioSource> Audios;
     public List<AudioSource> Waves;
+    public List<AudioClip> WavesClips;
 
     void Awake()
     {
@@ -44,8 +45,11 @@ public class AudioManager : MonoBehaviour
 
     public void PlayOneShot(EAudioType type)
     {
-        var clip = Audios[(int)type].clip;
-        Audios[(int)type].PlayOneShot(clip);
+        if (!Audios[(int)type].isPlaying)
+        {
+            var clip = Audios[(int)type].clip;
+            Audios[(int)type].PlayOneShot(clip);
+        }
     }
 
     public void Mute(EAudioType type, bool mute)
