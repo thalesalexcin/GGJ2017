@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -37,6 +38,17 @@ public class SignalWave : MonoBehaviour
 
         if (collider.CompareTag("NotBouncyBlock"))
             _DestroyAfterEffects();
+
+        if (collider.CompareTag("Inverser"))
+            _InverseInput();
+    }
+
+    private void _InverseInput()
+    {
+        if (InputType == EInputType.Left)
+            InputType = EInputType.Right;
+        else if (InputType == EInputType.Right)
+            InputType = EInputType.Left;
     }
 
     private void _DestroyAfterEffects()
