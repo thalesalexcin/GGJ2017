@@ -30,15 +30,18 @@ public class SignalWave : MonoBehaviour
     void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.CompareTag("Robot"))
-        {
-            Destroy(gameObject);
-        }
+            _DestroyAfterEffects();
+    }
+
+    private void _DestroyAfterEffects()
+    {
+        Destroy(gameObject);
     }
 
     void OnCollisionEnter2D()
     {
         _TimesBounced++;
         if (_TimesBounced > NumberOfBounces)
-            Destroy(gameObject);
+            _DestroyAfterEffects();
     }
 }
