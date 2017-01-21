@@ -10,18 +10,26 @@ public class SignalWave : MonoBehaviour
 
     public float Speed = 1f;
     public float DieTime;
-    public float robotSpeed;    
+    public float robotSpeed;
+    public float DelayForReplicating = 1;
 
     private Rigidbody2D _Rigidbody;
+    private bool _CanBeReplicated;
 
     void Awake()
     {
+        _CanBeReplicated = true;
         _Rigidbody = GetComponent<Rigidbody2D>();
 	}
 
     void Start()
     {
         Destroy(gameObject, DieTime);
+    }
+
+    public void SetReplicationOff()
+    {
+        _CanBeReplicated = false;
     }
 
     public void Send(Vector2 direction, EInputType input, int id)
@@ -44,6 +52,19 @@ public class SignalWave : MonoBehaviour
 
         else if (collider.CompareTag("SpeedBlock"))
             _ChangeSpeed(collider);
+
+        else if(collider.CompareTag("MultiplierBlock") && _CanBeReplicated)
+            _MultiplySignal(collider);
+    }
+
+    private void _MultiplySignal(Collider2D collider)
+    {
+        var emitter = collider.GetComponent<Emitter>();
+
+        var angle = Quaternion.LookRotation(Vector3.forward, _Rigidbody.velocity).eulerAngles.z;
+        emitter.SendReplicated((int) angle, transform.position, InputType, Id);
+
+        Destroy(gameObject);
     }
 
     private void _ChangeSpeed(Collider2D collider)
