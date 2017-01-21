@@ -49,6 +49,10 @@ public class CharacterControllerBonus : MonoBehaviour
     void onTriggerEnterEvent(Collider2D col)
     {
         Debug.Log("onTriggerEnterEvent: " + col.gameObject.name);
+        if (col.gameObject.tag == "BlocksTrigger")
+        {
+            _velocity.x += 20;
+        }
     }
 
 
