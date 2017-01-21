@@ -11,9 +11,11 @@ public class Turret : MonoBehaviour
     public float ProjectileSpeed = 1;
 
     private float _CurrentTimer;
+    private AudioManager _AudioManager;
 
     void Start()
     {
+        _AudioManager = FindObjectOfType<AudioManager>();
         _CurrentTimer = 0;
     }
 
@@ -36,5 +38,6 @@ public class Turret : MonoBehaviour
         projectile.transform.position += transform.position;
 
         projectile.Shoot(direction, ProjectileSpeed, ProjectileDieTime);
+        _AudioManager.Play(EAudioType.TurretShot);
     }
 }

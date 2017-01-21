@@ -4,5 +4,6 @@ using UnityEngine;
 
 public class SpeedBlock : MonoBehaviour
 {
-    public float SpeedMultiplier = 1.5f;	
+    public float SpeedMultiplier = 1.5f;
+    public float RobotSpeedMultiplier = 1;	
 }

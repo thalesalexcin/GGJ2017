@@ -28,9 +28,11 @@ public class CharacterControllerBonus : MonoBehaviour
     public bool debugControls;
     public ParticleSystem robotParticles;
     private ParticleSystem spawnedParticles;
+    private AudioManager _AudioManager;
 
     void Awake()
     {
+        _AudioManager = FindObjectOfType<AudioManager>();
         _animator = GetComponent<Animator>();
         _controller = GetComponent<CharacterController2D>();
         _RespawnPoint = GameObject.FindGameObjectWithTag("Respawn");
@@ -47,6 +49,9 @@ public class CharacterControllerBonus : MonoBehaviour
 
     void Start()
     {
+        _AudioManager.Play(EAudioType.Roll);
+        _AudioManager.Mute(EAudioType.Roll, true);
+
         SpawnParticles(robotParticles);
     }
 
@@ -85,13 +90,24 @@ public class CharacterControllerBonus : MonoBehaviour
             {
                 case EInputType.Left:
                     _velocity.x -= col.gameObject.GetComponent<SignalWave>().robotSpeed;
-                break;
+                    _AudioManager.Mute(EAudioType.Roll, false);
+                    break;
                 case EInputType.Right:
                     _velocity.x += col.gameObject.GetComponent<SignalWave>().robotSpeed;
-                break;
+                    _AudioManager.Mute(EAudioType.Roll, false);
+                    break;
                 case EInputType.Jump:
-                    _velocity.y = Mathf.Sqrt(2f * (jumpHeight* col.gameObject.GetComponent<SignalWave>().robotSpeed) * -gravity);
-                break;
+                    if (_controller.isGrounded)
+                    {
+                        _velocity.y = Mathf.Sqrt(2f * (jumpHeight) * -gravity);
+                        _AudioManager.Play(EAudioType.Jump);
+                    }
+                    else
+                    {
+                        var addJump = col.gameObject.GetComponent<SignalWave>().robotSpeed;
+                        _velocity.y += (jumpHeight * addJump)*0.8f;
+                    }
+                    break;
             }
             //Destroy(col.gameObject);
         }
@@ -106,8 +122,9 @@ public class CharacterControllerBonus : MonoBehaviour
             var nextSceneId = scene.buildIndex + 1;
 
             if (nextSceneId >= SceneManager.sceneCountInBuildSettings)
-                nextSceneId = 0;
+                nextSceneId = 1;
 
+            _AudioManager.Play(EAudioType.EndLevel);
             SceneManager.LoadScene(nextSceneId, LoadSceneMode.Single);
         }
     }
@@ -123,6 +140,7 @@ public class CharacterControllerBonus : MonoBehaviour
     void Dead()
     {
         //_EraseEnnemies();
+        _AudioManager.Play(EAudioType.Die);
 
         transform.position = _RespawnPoint.transform.position;
         _velocity = Vector2.zero;
@@ -203,6 +221,9 @@ public class CharacterControllerBonus : MonoBehaviour
 
         // grab our current _velocity to use as a base for all calculations
         _velocity = _controller.velocity;
+
+        if (Mathf.Abs(_velocity.x) <= 0.1f)
+            _AudioManager.Mute(EAudioType.Roll, true);
     }
 
 }
