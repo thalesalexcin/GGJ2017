@@ -1,24 +1,28 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class SignalWave : MonoBehaviour
 {
-    public float Speed = 1f;
-    public int NumberOfBounces = 3;
-
     public EInputType InputType { get; set; }
     public int Id { get; set; }
-    public float robotSpeed;
+
+    public float Speed = 1f;
+    public float DieTime;
+    public float robotSpeed;    
 
     private Rigidbody2D _Rigidbody;
-    private int _TimesBounced;
 
     void Awake()
     {
         _Rigidbody = GetComponent<Rigidbody2D>();
-        _TimesBounced = 0;
 	}
+
+    void Start()
+    {
+        Destroy(gameObject, DieTime);
+    }
 
     public void Send(Vector2 direction, EInputType input, int id)
     {
@@ -31,17 +35,33 @@ public class SignalWave : MonoBehaviour
     {
         if (collider.CompareTag("Robot"))
             _DestroyAfterEffects();
+
+        else if (collider.CompareTag("NotBouncyBlock"))
+            _DestroyAfterEffects();
+
+        else if (collider.CompareTag("Inverser"))
+            _InverseInput();
+
+        else if (collider.CompareTag("SpeedBlock"))
+            _ChangeSpeed(collider);
+    }
+
+    private void _ChangeSpeed(Collider2D collider)
+    {
+        var multiplier = collider.GetComponent<SpeedBlock>().SpeedMultiplier;
+        _Rigidbody.velocity *= multiplier;
+    }
+
+    private void _InverseInput()
+    {
+        if (InputType == EInputType.Left)
+            InputType = EInputType.Right;
+        else if (InputType == EInputType.Right)
+            InputType = EInputType.Left;
     }
 
     private void _DestroyAfterEffects()
     {
         Destroy(gameObject);
-    }
-
-    void OnCollisionEnter2D()
-    {
-        _TimesBounced++;
-        if (_TimesBounced > NumberOfBounces)
-            _DestroyAfterEffects();
     }
 }
