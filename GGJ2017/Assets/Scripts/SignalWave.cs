@@ -30,14 +30,7 @@ public class SignalWave : MonoBehaviour
     {
         if (collider.CompareTag("Receptor"))
         {
-            var rigidbody = collider.GetComponent<Rigidbody2D>();
-            switch (InputType)
-            {
-                case EInputType.Jump:
-                    rigidbody.AddForce(Vector2.up * 100);
-                    break;
-            }
-
+            //call character functions
             Destroy(gameObject);
         }
         else
