@@ -4,21 +4,24 @@ using UnityEngine;
 
 public class SignalWave : MonoBehaviour
 {
-    public float Speed = 1f;
-    public int NumberOfBounces = 3;
-
     public EInputType InputType { get; set; }
     public int Id { get; set; }
-    public float robotSpeed;
+
+    public float Speed = 1f;
+    public float DieTime;
+    public float robotSpeed;    
 
     private Rigidbody2D _Rigidbody;
-    private int _TimesBounced;
 
     void Awake()
     {
         _Rigidbody = GetComponent<Rigidbody2D>();
-        _TimesBounced = 0;
 	}
+
+    void Start()
+    {
+        Destroy(gameObject, DieTime);
+    }
 
     public void Send(Vector2 direction, EInputType input, int id)
     {
@@ -31,17 +34,13 @@ public class SignalWave : MonoBehaviour
     {
         if (collider.CompareTag("Robot"))
             _DestroyAfterEffects();
+
+        if (collider.CompareTag("NotBouncyBlock"))
+            _DestroyAfterEffects();
     }
 
     private void _DestroyAfterEffects()
     {
         Destroy(gameObject);
-    }
-
-    void OnCollisionEnter2D()
-    {
-        _TimesBounced++;
-        if (_TimesBounced > NumberOfBounces)
-            _DestroyAfterEffects();
     }
 }
