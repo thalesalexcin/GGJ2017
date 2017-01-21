@@ -7,6 +7,8 @@ public class Turret : MonoBehaviour
 {
     public Projectile ProjectilePrefab;
     public float ShootDelay = 1f;
+    public float ProjectileDieTime = 5;
+    public float ProjectileSpeed = 1;
 
     private float _CurrentTimer;
 
@@ -31,7 +33,8 @@ public class Turret : MonoBehaviour
         var projectile = Instantiate<Projectile>(ProjectilePrefab);
 
         var direction = transform.TransformDirection(Vector3.right);
-        projectile.Direction = direction;
         projectile.transform.position += transform.position;
+
+        projectile.Shoot(direction, ProjectileSpeed, ProjectileDieTime);
     }
 }

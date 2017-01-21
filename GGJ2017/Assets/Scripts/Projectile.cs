@@ -4,17 +4,14 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    public Vector3 Direction { get; set; }
-    public float Speed = 3;
-    public float DieTime = 5f;
+    private Rigidbody2D _Rigidbody;
 
-    void Start()
+    public void Shoot(Vector3 direction, float speed, float dieTime)
     {
-        Destroy(gameObject, DieTime);
+        _Rigidbody = GetComponent<Rigidbody2D>();
+        _Rigidbody.AddForce(direction * speed, ForceMode2D.Impulse);
+
+        if(dieTime > 0)
+            Destroy(gameObject, dieTime);
     }
-
-    void Update ()
-    {
-        transform.Translate(Direction * Speed * Time.deltaTime);
-	}
 }

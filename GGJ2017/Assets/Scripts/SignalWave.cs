@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class SignalWave : MonoBehaviour
 {
-    public EInputType InputType { get; set; }
+    public EInputType InputType;
     public int Id { get; set; }
 
     public float Speed = 1f;
