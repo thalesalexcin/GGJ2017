@@ -12,6 +12,8 @@ public class CharacterControllerBonus : MonoBehaviour
     public float inAirDamping = 5f;
     public float jumpHeight = 3f;
 
+    private GameObject _RespawnPoint;
+
     [HideInInspector]
     private float normalizedHorizontalSpeed = 0;
 
@@ -26,6 +28,7 @@ public class CharacterControllerBonus : MonoBehaviour
     {
         _animator = GetComponent<Animator>();
         _controller = GetComponent<CharacterController2D>();
+        _RespawnPoint = GameObject.FindGameObjectWithTag("Respawn");
 
         // listen to some events for illustration purposes
         _controller.onControllerCollidedEvent += onControllerCollider;
@@ -69,6 +72,12 @@ public class CharacterControllerBonus : MonoBehaviour
                 break;
             }
             //Destroy(col.gameObject);
+        }
+
+        if (col.CompareTag("Hazard"))
+        {
+            transform.position = _RespawnPoint.transform.position;
+            _velocity = Vector2.zero;
         }
     }
 
