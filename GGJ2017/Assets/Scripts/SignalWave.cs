@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -53,8 +52,37 @@ public class SignalWave : MonoBehaviour
         else if (collider.CompareTag("SpeedBlock"))
             _ChangeSpeed(collider);
 
-        else if(collider.CompareTag("MultiplierBlock") && _CanBeReplicated)
+        else if (collider.CompareTag("MultiplierBlock") && _CanBeReplicated)
             _MultiplySignal(collider);
+
+        else if (collider.CompareTag("RedirectBlock"))
+            _RedirectSignal(collider);
+
+        else if (collider.CompareTag("RandomRedirectBlock"))
+            _RandomRedirectSignal(collider);
+    }
+
+    private void _RedirectSignal(Collider2D collider)
+    {
+        var angle = collider.transform.rotation.eulerAngles.z;
+        var direction = Quaternion.AngleAxis(angle, Vector3.forward) * Vector3.up;
+        _Rigidbody.velocity = Vector2.zero;
+
+        transform.position = collider.transform.position;
+
+        Send(direction, InputType, Id);
+    }
+
+    private void _RandomRedirectSignal(Collider2D collider)
+    {
+        _RedirectSignal(collider);
+
+        var rotation = Random.rotationUniform;
+
+        rotation.x = 0;
+        rotation.y = 0;
+
+        collider.transform.rotation = rotation;
     }
 
     private void _MultiplySignal(Collider2D collider)
@@ -62,7 +90,7 @@ public class SignalWave : MonoBehaviour
         var emitter = collider.GetComponent<Emitter>();
 
         var angle = Quaternion.LookRotation(Vector3.forward, _Rigidbody.velocity).eulerAngles.z;
-        emitter.SendReplicated((int) angle, transform.position, InputType, Id);
+        emitter.SendReplicated((int) angle, transform.position, robotSpeed, InputType, Id);
 
         Destroy(gameObject);
     }
