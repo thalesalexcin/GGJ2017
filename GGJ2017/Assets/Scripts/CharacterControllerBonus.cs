@@ -89,7 +89,7 @@ public class CharacterControllerBonus : MonoBehaviour
                     _velocity.x += col.gameObject.GetComponent<SignalWave>().robotSpeed;
                 break;
                 case EInputType.Jump:
-                    _velocity.y = Mathf.Sqrt(2f * jumpHeight * -gravity);
+                    _velocity.y = Mathf.Sqrt(2f * (jumpHeight* col.gameObject.GetComponent<SignalWave>().robotSpeed) * -gravity);
                 break;
             }
             //Destroy(col.gameObject);
@@ -97,9 +97,7 @@ public class CharacterControllerBonus : MonoBehaviour
 
         if (col.CompareTag("Hazard"))
         {
-            transform.position = _RespawnPoint.transform.position;
-            _velocity = Vector2.zero;
-            SpawnParticles(robotParticles);
+            Dead();
         }
         if (col.CompareTag("Finish"))
         {
@@ -115,6 +113,12 @@ public class CharacterControllerBonus : MonoBehaviour
 
     #endregion
 
+    void Dead()
+    {
+        transform.position = _RespawnPoint.transform.position;
+        _velocity = Vector2.zero;
+        SpawnParticles(robotParticles);
+    }
 
     // the Update loop contains a very simple example of moving the character around and controlling the animation
     void Update()
