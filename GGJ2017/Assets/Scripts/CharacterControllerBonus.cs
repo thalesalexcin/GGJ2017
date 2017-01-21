@@ -13,6 +13,7 @@ public class CharacterControllerBonus : MonoBehaviour
     public float inAirDamping = 5f;
     public float jumpHeight = 3f;
 
+    public GameObject SignalsHolder;
     private GameObject _RespawnPoint;
     private GameObject endPoint;
 
@@ -115,9 +116,17 @@ public class CharacterControllerBonus : MonoBehaviour
 
     void Dead()
     {
+        //_EraseEnnemies();
+
         transform.position = _RespawnPoint.transform.position;
         _velocity = Vector2.zero;
         SpawnParticles(robotParticles);
+    }
+
+    private void _EraseEnnemies()
+    {
+        foreach (var child in SignalsHolder.GetComponentsInChildren<SignalWave>())
+            Destroy(child.gameObject);
     }
 
     // the Update loop contains a very simple example of moving the character around and controlling the animation
