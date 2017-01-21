@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 using Prime31;
 
 
@@ -13,6 +14,7 @@ public class CharacterControllerBonus : MonoBehaviour
     public float jumpHeight = 3f;
 
     private GameObject _RespawnPoint;
+    private GameObject endPoint;
 
     [HideInInspector]
     private float normalizedHorizontalSpeed = 0;
@@ -23,17 +25,36 @@ public class CharacterControllerBonus : MonoBehaviour
     [HideInInspector]
     public Vector3 _velocity;
     public bool debugControls;
+    public ParticleSystem robotParticles;
+    private ParticleSystem spawnedParticles;
 
     void Awake()
     {
         _animator = GetComponent<Animator>();
         _controller = GetComponent<CharacterController2D>();
         _RespawnPoint = GameObject.FindGameObjectWithTag("Respawn");
+        endPoint = GameObject.FindGameObjectWithTag("Finish");
 
         // listen to some events for illustration purposes
         _controller.onControllerCollidedEvent += onControllerCollider;
         _controller.onTriggerEnterEvent += onTriggerEnterEvent;
         _controller.onTriggerExitEvent += onTriggerExitEvent;
+
+        transform.position = _RespawnPoint.transform.position;
+        _velocity = Vector2.zero;
+    }
+
+    void Start()
+    {
+        SpawnParticles(robotParticles);
+    }
+
+    void SpawnParticles(ParticleSystem particlesToSpawn)
+    {
+        spawnedParticles = Instantiate(particlesToSpawn, transform);
+        spawnedParticles.transform.position = transform.position;
+        spawnedParticles.gameObject.SetActive(true);
+        Destroy(spawnedParticles.gameObject, 2f);
     }
 
 
@@ -78,6 +99,11 @@ public class CharacterControllerBonus : MonoBehaviour
         {
             transform.position = _RespawnPoint.transform.position;
             _velocity = Vector2.zero;
+            SpawnParticles(robotParticles);
+        }
+        if (col.CompareTag("Finish"))
+        {
+            SceneManager.LoadScene(col.GetComponent<EndPoint>().levelToLoad, LoadSceneMode.Single);
         }
     }
 
