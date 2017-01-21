@@ -13,17 +13,16 @@ public enum EInputType
 
 public class SignalEmitter : MonoBehaviour
 {
-    public SignalWave SignalWavePrefab;
-    public GameObject SignalsHolder;
-
-    [Range(15, 360)]
-    public int Angle = 360;
-
-    public int NumberOfSignals = 3;
     public float TimeBetweenSameInput = 0.3f;
 
+    private Emitter _Emitter;
     private Dictionary<EInputType, float> _timersByInput;
     private int _CurrentId = 0;
+
+    void Awake()
+    {
+        _Emitter = GetComponent<Emitter>();
+    }
 
     // Use this for initialization
     void Start ()
@@ -73,7 +72,7 @@ public class SignalEmitter : MonoBehaviour
         {
             if (_timersByInput[input] <= 0)
             {
-                _SendSignals(input, _CurrentId++);
+                _Emitter.Send((int)transform.rotation.eulerAngles.z, transform.position, input, _CurrentId++);
                 _timersByInput[input] = TimeBetweenSameInput;
             }
         }
@@ -102,27 +101,5 @@ public class SignalEmitter : MonoBehaviour
         float distance;
         xy.Raycast(ray, out distance);
         return ray.GetPoint(distance);
-    }
-
-    private void _SendSignals(EInputType input, int id)
-    {
-        for (int i = 0; i < NumberOfSignals; i++)
-        {
-            var angleBetweenSignals = 0;
-            var angle = transform.rotation.eulerAngles.z;
-            if (NumberOfSignals > 1)
-            {
-                angleBetweenSignals = Angle / (NumberOfSignals - 1);
-                angle = angle + (i * angleBetweenSignals) - (Angle / 2);
-            }
-
-            var signal = Instantiate<SignalWave>(SignalWavePrefab);
-            
-            signal.transform.position = transform.position;
-            signal.transform.parent = SignalsHolder.transform;
-
-            var direction = Quaternion.AngleAxis(angle, Vector3.forward) * Vector3.up;
-            signal.Send(direction, input, id);
-        }
     }
 }
