@@ -103,7 +103,12 @@ public class CharacterControllerBonus : MonoBehaviour
         if (col.CompareTag("Finish"))
         {
             var scene = SceneManager.GetActiveScene();
-            SceneManager.LoadScene(scene.buildIndex+1, LoadSceneMode.Single);
+            var nextSceneId = scene.buildIndex + 1;
+
+            if (nextSceneId >= SceneManager.sceneCountInBuildSettings)
+                nextSceneId = 0;
+
+            SceneManager.LoadScene(nextSceneId, LoadSceneMode.Single);
         }
     }
 
