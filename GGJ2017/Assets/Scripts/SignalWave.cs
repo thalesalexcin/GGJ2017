@@ -33,11 +33,12 @@ public class SignalWave : MonoBehaviour
             //call character functions
             Destroy(gameObject);
         }
-        else
-        {
-            _TimesBounced++;
-            if (_TimesBounced >= NumberOfBounces)
-                Destroy(gameObject);
-        }
+    }
+
+    void OnCollisionEnter2D()
+    {
+        _TimesBounced++;
+        if (_TimesBounced >= NumberOfBounces)
+            Destroy(gameObject);
     }
 }
