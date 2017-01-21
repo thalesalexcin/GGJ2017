@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 public enum EInputType
 {
-    None = 0,
     Right,
     Left,
     Jump
@@ -15,17 +15,23 @@ public class SignalEmitter : MonoBehaviour
 {
     public SignalWave SignalWavePrefab;
     public GameObject SignalsHolder;
-    public bool IsUsingJoystick;
 
     [Range(15, 360)]
     public int Angle = 360;
-    public int NumberOfSignals = 3;
 
+    public int NumberOfSignals = 3;
+    public float TimeBetweenSameInput = 0.3f;
+
+    private Dictionary<EInputType, float> _timersByInput;
     private int _CurrentId = 0;
 
-	// Use this for initialization
-	void Start () {
-		
+    // Use this for initialization
+    void Start ()
+    {
+        _timersByInput = new Dictionary<EInputType, float>();
+
+        foreach (EInputType inputType in Enum.GetValues(typeof(EInputType)))
+            _timersByInput.Add(inputType, 0);
 	}
 	
 	// Update is called once per frame
@@ -37,19 +43,40 @@ public class SignalEmitter : MonoBehaviour
 
     private void _SendSignals()
     {
-        EInputType input = EInputType.None;
+        List<EInputType> inputs = new List<EInputType>();
 
         if (Input.GetAxisRaw("Fire1") > 0.5f)
-            input = EInputType.Right;
+        {
+            inputs.Add(EInputType.Right);
+            _timersByInput[EInputType.Right] -= Time.deltaTime;
+        }
+        else
+            _timersByInput[EInputType.Right] = 0;
 
         if (Input.GetAxis("Fire2") > 0.5f)
-            input = EInputType.Left;
+        {
+            inputs.Add(EInputType.Left);
+            _timersByInput[EInputType.Left] -= Time.deltaTime;
+        }
+        else
+            _timersByInput[EInputType.Left] = 0;
 
         if (Input.GetAxis("Fire3") > 0.5f)
-            input = EInputType.Jump;
+        {
+            inputs.Add(EInputType.Jump);
+            _timersByInput[EInputType.Jump] -= Time.deltaTime;
+        }
+        else
+            _timersByInput[EInputType.Jump] = 0;
 
-        if (input != EInputType.None)
-            _SendSignals(input, _CurrentId++);
+        foreach (var input in inputs)
+        {
+            if (_timersByInput[input] <= 0)
+            {
+                _SendSignals(input, _CurrentId++);
+                _timersByInput[input] = TimeBetweenSameInput;
+            }
+        }
     }
 
     private void _SetEmmiterRotation()
