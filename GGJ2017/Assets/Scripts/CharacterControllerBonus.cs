@@ -183,7 +183,10 @@ public class CharacterControllerBonus : MonoBehaviour
         {
             transform.localScale = new Vector3(-localLocalScale.x, localLocalScale.y, localLocalScale.z);
         }
-
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            SceneManager.LoadScene(1, LoadSceneMode.Single);
+        }
         if ((Input.GetKey(KeyCode.RightArrow))&&(debugControls))
         {
             normalizedHorizontalSpeed = 1;

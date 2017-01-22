@@ -42,4 +42,9 @@ public class LevelList : MonoBehaviour {
     {
         SceneManager.LoadScene(selectedLevel, LoadSceneMode.Single);
     }
+
+    public void OpenWebsite(string website)
+    {
+        Application.OpenURL(website);
+    }
 }
