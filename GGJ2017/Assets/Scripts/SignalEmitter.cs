@@ -76,7 +76,7 @@ public class SignalEmitter : MonoBehaviour
         {
             if (_timersByInput[input] <= 0)
             {
-                _Emitter.Send((int)transform.rotation.eulerAngles.z, transform.position, input, _CurrentId++);
+                _Emitter.Send(transform.rotation.eulerAngles.z, transform.position, input, _CurrentId++);
                 _timersByInput[input] = TimeBetweenSameInput;
                 _hasSent = true;
             }
