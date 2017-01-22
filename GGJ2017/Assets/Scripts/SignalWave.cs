@@ -123,8 +123,8 @@ public class SignalWave : MonoBehaviour
     private void _ChangeSpeed(Collider2D collider)
     {
         var speedBlock = collider.GetComponent<SpeedBlock>();
-
-        Speed *= speedBlock.SpeedMultiplier;
+        
+        _Rigidbody.velocity *= speedBlock.SpeedMultiplier;
         robotSpeed *= speedBlock.RobotSpeedMultiplier;
     }
 
