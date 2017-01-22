@@ -124,7 +124,7 @@ public class SignalWave : MonoBehaviour
     {
         var speedBlock = collider.GetComponent<SpeedBlock>();
         
-        _Rigidbody.velocity *= speedBlock.SpeedMultiplier;
+        Speed *= speedBlock.SpeedMultiplier;
         robotSpeed *= speedBlock.RobotSpeedMultiplier;
     }
 
