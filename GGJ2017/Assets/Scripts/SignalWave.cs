@@ -33,6 +33,7 @@ public class SignalWave : MonoBehaviour
 
     void DestroySignal()
     {
+        _CanBeReplicated = true;
         gameObject.SetActive(false);
     }
 
