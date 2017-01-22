@@ -126,6 +126,10 @@ public class SignalWave : MonoBehaviour
         
         Speed *= speedBlock.SpeedMultiplier;
         robotSpeed *= speedBlock.RobotSpeedMultiplier;
+
+        var direction = _Rigidbody.velocity.normalized;
+        _Rigidbody.velocity = Vector2.zero;
+        Send(direction, InputType, Id);
     }
 
     private void _InverseInput()
