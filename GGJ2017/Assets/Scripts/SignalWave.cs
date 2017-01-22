@@ -115,7 +115,7 @@ public class SignalWave : MonoBehaviour
         var emitter = collider.GetComponent<Emitter>();
 
         var angle = Quaternion.LookRotation(Vector3.forward, _Rigidbody.velocity).eulerAngles.z;
-        emitter.SendReplicated(angle, transform.position, robotSpeed, InputType, Id);
+        emitter.SendReplicated(angle, transform.position, robotSpeed, Speed, InputType, Id);
 
         DestroySignal();
     }

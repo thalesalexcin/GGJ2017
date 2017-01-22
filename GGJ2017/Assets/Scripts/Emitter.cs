@@ -14,10 +14,10 @@ public class Emitter : MonoBehaviour
 
 	public void Send(float initialAngle, Vector3 initialPosition, EInputType type, int id, bool replicated = false)
     {
-        _Send(initialAngle, initialPosition, SignalWavePrefab.robotSpeed, type, id, replicated);
+        _Send(initialAngle, initialPosition, SignalWavePrefab.robotSpeed, SignalWavePrefab.Speed, type, id, replicated);
     }
 
-    private void _Send(float initialAngle, Vector3 initialPosition, float robotSpeed, EInputType type, int id, bool replicated)
+    private void _Send(float initialAngle, Vector3 initialPosition, float robotSpeed, float speed, EInputType type, int id, bool replicated)
     {
         for (int i = 0; i < NumberOfSignals; i++)
         {
@@ -34,6 +34,7 @@ public class Emitter : MonoBehaviour
             signal.gameObject.SetActive(true);
             signal.transform.position = initialPosition;
             signal.robotSpeed = robotSpeed;
+            signal.Speed = speed;
 
             if (replicated)
                 signal.SetReplicationOff();
@@ -44,8 +45,8 @@ public class Emitter : MonoBehaviour
         }
     }
 
-    public void SendReplicated(float initialAngle, Vector3 initialPosition, float robotSpeed, EInputType inputType, int id)
+    public void SendReplicated(float initialAngle, Vector3 initialPosition, float robotSpeed, float speed, EInputType inputType, int id)
     {
-        _Send(initialAngle, initialPosition, robotSpeed, inputType, id, true);
+        _Send(initialAngle, initialPosition, robotSpeed, speed, inputType, id, true);
     }
 }
