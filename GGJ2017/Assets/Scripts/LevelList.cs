@@ -45,6 +45,6 @@ public class LevelList : MonoBehaviour {
 
     public void OpenWebsite(string website)
     {
-        Application.OpenURL(website);
+        Application.ExternalEval("window.open(\"" + website +"\")");
     }
 }
