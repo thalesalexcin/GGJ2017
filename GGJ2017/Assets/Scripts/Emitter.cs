@@ -13,20 +13,20 @@ public class Emitter : MonoBehaviour
     public int NumberOfSignals;
 	
 
-	public void Send(int initialAngle, Vector3 initialPosition, EInputType type, int id, bool replicated = false)
+	public void Send(float initialAngle, Vector3 initialPosition, EInputType type, int id, bool replicated = false)
     {
         _Send(initialAngle, initialPosition, SignalWavePrefab.robotSpeed, type, id, replicated);
     }
 
-    private void _Send(int initialAngle, Vector3 initialPosition, float robotSpeed, EInputType type, int id, bool replicated)
+    private void _Send(float initialAngle, Vector3 initialPosition, float robotSpeed, EInputType type, int id, bool replicated)
     {
         for (int i = 0; i < NumberOfSignals; i++)
         {
-            var angleBetweenSignals = 0;
+            var angleBetweenSignals = 0f;
             var angle = initialAngle;
             if (NumberOfSignals > 1)
             {
-                angleBetweenSignals = Angle / (NumberOfSignals - 1);
+                angleBetweenSignals = (float) Angle / (NumberOfSignals - 1);
                 angle = angle + (i * angleBetweenSignals) - (Angle / 2);
             }
 
@@ -44,7 +44,7 @@ public class Emitter : MonoBehaviour
         }
     }
 
-    public void SendReplicated(int initialAngle, Vector3 initialPosition, float robotSpeed, EInputType inputType, int id)
+    public void SendReplicated(float initialAngle, Vector3 initialPosition, float robotSpeed, EInputType inputType, int id)
     {
         _Send(initialAngle, initialPosition, robotSpeed, inputType, id, true);
     }
