@@ -122,8 +122,10 @@ public class SignalWave : MonoBehaviour
 
     private void _ChangeSpeed(Collider2D collider)
     {
-        var multiplier = collider.GetComponent<SpeedBlock>().SpeedMultiplier;
-        _Rigidbody.velocity *= multiplier;
+        var speedBlock = collider.GetComponent<SpeedBlock>();
+        
+        _Rigidbody.velocity *= speedBlock.SpeedMultiplier;
+        robotSpeed *= speedBlock.RobotSpeedMultiplier;
     }
 
     private void _InverseInput()
@@ -132,6 +134,10 @@ public class SignalWave : MonoBehaviour
             InputType = EInputType.Right;
         else if (InputType == EInputType.Right)
             InputType = EInputType.Left;
+
+        var direction = _Rigidbody.velocity.normalized;
+        _Rigidbody.velocity = Vector2.zero;
+        Send(direction, InputType, Id);
     }
 
     private void _DestroyAfterEffects()
