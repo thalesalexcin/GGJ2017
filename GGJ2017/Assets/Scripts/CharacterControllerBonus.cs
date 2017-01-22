@@ -29,6 +29,7 @@ public class CharacterControllerBonus : MonoBehaviour
     public ParticleSystem robotParticles;
     private ParticleSystem spawnedParticles;
     private AudioManager _AudioManager;
+    private Vector3 localLocalScale;
 
     void Awake()
     {
@@ -44,6 +45,7 @@ public class CharacterControllerBonus : MonoBehaviour
         _controller.onTriggerExitEvent += onTriggerExitEvent;
 
         transform.position = _RespawnPoint.transform.position;
+        localLocalScale = transform.localScale;
         _velocity = Vector2.zero;
     }
 
@@ -86,24 +88,13 @@ public class CharacterControllerBonus : MonoBehaviour
             switch(col.gameObject.GetComponent<SignalWave>().InputType)
             {
                 case EInputType.Left:
-                    _velocity.x -= col.gameObject.GetComponent<SignalWave>().robotSpeed;
-                    _AudioManager.PlayOneShot(EAudioType.Roll);
+                    ReceiveMoveLeft(col.gameObject.GetComponent<SignalWave>().robotSpeed);
                     break;
                 case EInputType.Right:
-                    _velocity.x += col.gameObject.GetComponent<SignalWave>().robotSpeed;
-                    _AudioManager.PlayOneShot(EAudioType.Roll);
+                    ReceiveMoveRight(col.gameObject.GetComponent<SignalWave>().robotSpeed);
                     break;
                 case EInputType.Jump:
-                    if (_controller.isGrounded)
-                    {
-                        _velocity.y = Mathf.Sqrt(2f * (jumpHeight) * -gravity);
-                        _AudioManager.Play(EAudioType.Jump);
-                    }
-                    else
-                    {
-                        var addJump = col.gameObject.GetComponent<SignalWave>().robotSpeed;
-                        _velocity.y += (jumpHeight * addJump)*0.8f;
-                    }
+                    ReceiveMoveJump(col.gameObject.GetComponent<SignalWave>().robotSpeed);
                     break;
             }
             //Destroy(col.gameObject);
@@ -126,6 +117,31 @@ public class CharacterControllerBonus : MonoBehaviour
         }
     }
 
+    public void ReceiveMoveLeft(float velocityToAdd)
+    {
+        _velocity.x -= velocityToAdd;
+        _AudioManager.PlayOneShot(EAudioType.Roll);
+    }
+
+    public void ReceiveMoveRight(float velocityToAdd)
+    {
+        _velocity.x += velocityToAdd;
+        _AudioManager.PlayOneShot(EAudioType.Roll);
+    }
+
+    public void ReceiveMoveJump(float velocityToAdd)
+    {
+        if (_controller.isGrounded)
+        {
+            _velocity.y = Mathf.Sqrt(2f * (jumpHeight) * -gravity);
+            _AudioManager.Play(EAudioType.Jump);
+        }
+        else
+        {
+            var addJump = velocityToAdd;
+            _velocity.y += (jumpHeight * addJump) * 0.8f;
+        }
+    }
 
     void onTriggerExitEvent(Collider2D col)
     {
@@ -156,6 +172,16 @@ public class CharacterControllerBonus : MonoBehaviour
         if (_controller.isGrounded)
         {
             //_velocity.y = 0;
+        }
+
+        if (_velocity.x > 0f)
+        {
+            transform.localScale = localLocalScale;
+        }
+
+        else if (_velocity.x < 0f)
+        {
+            transform.localScale = new Vector3(-localLocalScale.x, localLocalScale.y, localLocalScale.z);
         }
 
         if ((Input.GetKey(KeyCode.RightArrow))&&(debugControls))
