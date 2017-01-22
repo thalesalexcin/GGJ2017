@@ -6,7 +6,6 @@ using UnityEngine;
 public class Emitter : MonoBehaviour
 {
     public SignalWave SignalWavePrefab;
-    public GameObject SignalsHolder;
 
     [Range(15, 360)]
     public int Angle;
@@ -30,11 +29,12 @@ public class Emitter : MonoBehaviour
                 angle = angle + (i * angleBetweenSignals) - (Angle / 2);
             }
 
-            var signal = Instantiate<SignalWave>(SignalWavePrefab);
+            var signal = SignalWavePooling.Current.GetPooled();
 
+            signal.gameObject.SetActive(true);
             signal.transform.position = initialPosition;
-            signal.transform.parent = SignalsHolder.transform;
             signal.robotSpeed = robotSpeed;
+
             if (replicated)
                 signal.SetReplicationOff();
 

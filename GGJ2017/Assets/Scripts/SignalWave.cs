@@ -21,9 +21,19 @@ public class SignalWave : MonoBehaviour
         _Rigidbody = GetComponent<Rigidbody2D>();
 	}
 
-    void Start()
+    void OnEnable()
     {
-        Destroy(gameObject, DieTime);
+        Invoke("DestroySignal", DieTime);
+    }
+
+    void OnDisable()
+    {
+        CancelInvoke("DestroySignal");
+    }
+
+    void DestroySignal()
+    {
+        gameObject.SetActive(false);
     }
 
     public void SetReplicationOff()
@@ -106,7 +116,7 @@ public class SignalWave : MonoBehaviour
         var angle = Quaternion.LookRotation(Vector3.forward, _Rigidbody.velocity).eulerAngles.z;
         emitter.SendReplicated(angle, transform.position, robotSpeed, InputType, Id);
 
-        Destroy(gameObject);
+        DestroySignal();
     }
 
     private void _ChangeSpeed(Collider2D collider)
@@ -125,6 +135,6 @@ public class SignalWave : MonoBehaviour
 
     private void _DestroyAfterEffects()
     {
-        Destroy(gameObject);
+        DestroySignal();
     }
 }
