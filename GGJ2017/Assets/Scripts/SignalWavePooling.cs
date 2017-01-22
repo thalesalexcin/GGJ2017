@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 public class SignalWavePooling : MonoBehaviour
 {
@@ -44,5 +45,11 @@ public class SignalWavePooling : MonoBehaviour
             inactive = _Instantiate();
 
         return inactive;
+    }
+
+    public void DestroyAll()
+    {
+        foreach (var child in _pooledObjects)
+            child.DestroySignal();
     }
 }

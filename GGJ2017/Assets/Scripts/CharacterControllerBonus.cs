@@ -108,6 +108,7 @@ public class CharacterControllerBonus : MonoBehaviour
         {
             var scene = SceneManager.GetActiveScene();
             var nextSceneId = scene.buildIndex + 1;
+            SignalWavePooling.Current.DestroyAll();
 
             if (nextSceneId >= SceneManager.sceneCountInBuildSettings)
                 nextSceneId = 1;
@@ -152,21 +153,14 @@ public class CharacterControllerBonus : MonoBehaviour
 
     void Dead()
     {
-        //_EraseEnnemies();
         _AudioManager.Play(EAudioType.Die);
 
         transform.position = _RespawnPoint.transform.position;
         _velocity = Vector2.zero;
         SpawnParticles(robotParticles);
     }
-
-    private void _EraseEnnemies()
-    {
-        foreach (var child in SignalsHolder.GetComponentsInChildren<SignalWave>())
-            Destroy(child.gameObject);
-    }
-
     // the Update loop contains a very simple example of moving the character around and controlling the animation
+
     void Update()
     {
         if (_controller.isGrounded)

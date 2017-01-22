@@ -31,7 +31,7 @@ public class SignalWave : MonoBehaviour
         CancelInvoke("DestroySignal");
     }
 
-    void DestroySignal()
+    public void DestroySignal()
     {
         _CanBeReplicated = true;
         gameObject.SetActive(false);

@@ -48,29 +48,31 @@ public class SignalEmitter : MonoBehaviour
         List<EInputType> inputs = new List<EInputType>();
         _hasSent = false;
 
+        _timersByInput[EInputType.Right] -= Time.deltaTime;
+        _timersByInput[EInputType.Left] -= Time.deltaTime;
+        _timersByInput[EInputType.Jump] -= Time.deltaTime;
+
         if (Input.GetAxisRaw("Fire1") > 0.5f)
         {
             inputs.Add(EInputType.Right);
-            _timersByInput[EInputType.Right] -= Time.deltaTime;
+            
         }
-        else
-            _timersByInput[EInputType.Right] = 0;
+        //else
+        //    _timersByInput[EInputType.Right] = 0;
 
         if (Input.GetAxis("Fire2") > 0.5f)
         {
             inputs.Add(EInputType.Left);
-            _timersByInput[EInputType.Left] -= Time.deltaTime;
         }
-        else
-            _timersByInput[EInputType.Left] = 0;
+        //else
+        //    _timersByInput[EInputType.Left] = 0;
 
         if (Input.GetAxis("Fire3") > 0.5f)
         {
             inputs.Add(EInputType.Jump);
-            _timersByInput[EInputType.Jump] -= Time.deltaTime;
         }
-        else
-            _timersByInput[EInputType.Jump] = 0;
+        //else
+        //    _timersByInput[EInputType.Jump] = 0;
 
         foreach (var input in inputs)
         {

@@ -45,6 +45,10 @@ public class LevelList : MonoBehaviour {
 
     public void OpenWebsite(string website)
     {
-        Application.ExternalEval("window.open(\"" + website +"\")");
+#if UNITY_WEBGL && !UNITY_EDITOR
+        Application.ExternalEval("window.open(\"" + website + "\")");
+#else
+        Application.OpenURL(website);
+#endif
     }
 }
