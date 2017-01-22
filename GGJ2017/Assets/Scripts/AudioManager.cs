@@ -17,7 +17,6 @@ public class AudioManager : MonoBehaviour
 {
     public List<AudioSource> Audios;
     public List<AudioSource> Waves;
-    public List<AudioClip> WavesClips;
 
     void Awake()
     {
